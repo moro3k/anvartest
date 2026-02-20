@@ -1,81 +1,81 @@
-# Effective Mobile - DevOps Test Assignment
+# Effective Mobile — Тестовое задание DevOps
 
-Simple web application: Python HTTP backend behind Nginx reverse proxy, running in Docker containers.
+Простое веб-приложение: Python HTTP-сервер за Nginx reverse proxy, запущенные в Docker-контейнерах.
 
-## Project Structure
+## Структура проекта
 
 ```
 .
 ├── backend/
-│   ├── Dockerfile          # Backend image build instructions
-│   └── app.py              # Python HTTP server
+│   ├── Dockerfile          # Сборка образа backend
+│   └── app.py              # Python HTTP-сервер
 ├── nginx/
-│   └── nginx.conf          # Nginx reverse proxy configuration
-├── docker-compose.yml      # Service orchestration
-├── .env.example            # Environment variables template
+│   └── nginx.conf          # Конфигурация Nginx reverse proxy
+├── docker-compose.yml      # Оркестрация сервисов
+├── .env.example            # Шаблон переменных окружения
 └── README.md
 ```
 
-## Architecture
+## Архитектура
 
 ```
-Client (HTTP)
+Клиент (HTTP)
     │
     ▼
 ┌──────────┐        ┌──────────┐
 │  Nginx   │───────▶│ Backend  │
 │ :80      │  proxy │ :8080    │
-│ (public) │        │(internal)│
+│(публичный)│       │(внутренн.)│
 └──────────┘        └──────────┘
      app-network (bridge)
 ```
 
-- **Nginx** listens on port 80 and proxies all requests to the backend service.
-- **Backend** is a Python `http.server` that responds with `Hello from Effective Mobile!` on `/`.
-- Backend is **not exposed** to the host — it is accessible only within the Docker network.
+- **Nginx** принимает HTTP-запросы на порт 80 и проксирует их на backend-сервис.
+- **Backend** — Python `http.server`, отвечает текстом `Hello from Effective Mobile!` на `/`.
+- Backend **не доступен** с хоста — работает только внутри Docker-сети.
 
-## How to Run
+## Запуск
 
-### Prerequisites
+### Требования
 
 - Docker
 - Docker Compose
 
-### Start
+### Старт
 
 ```bash
 docker compose up -d --build
 ```
 
-### Verify
+### Проверка
 
 ```bash
 curl http://localhost
 ```
 
-Expected response:
+Ожидаемый ответ:
 
 ```
 Hello from Effective Mobile!
 ```
 
-### Stop
+### Остановка
 
 ```bash
 docker compose down
 ```
 
-## Configuration
+## Конфигурация
 
-Environment variables can be set via `.env` file (see `.env.example`):
+Переменные окружения задаются через файл `.env` (см. `.env.example`):
 
-| Variable               | Default            | Description                  |
-|------------------------|--------------------|------------------------------|
-| `COMPOSE_PROJECT_NAME` | `effective-mobile` | Docker Compose project name  |
-| `APP_PORT`             | `8080`             | Backend application port     |
-| `NGINX_PORT`           | `80`               | Nginx published port on host |
+| Переменная             | По умолчанию       | Описание                          |
+|------------------------|---------------------|-----------------------------------|
+| `COMPOSE_PROJECT_NAME` | `effective-mobile`  | Имя проекта Docker Compose        |
+| `APP_PORT`             | `8080`              | Порт backend-приложения           |
+| `NGINX_PORT`           | `80`                | Публикуемый порт Nginx на хосте   |
 
-## Technologies
+## Технологии
 
 - Python 3.12 (alpine)
 - Nginx 1.27 (alpine)
